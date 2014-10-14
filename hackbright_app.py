@@ -15,11 +15,11 @@ def make_new_student(first_name, last_name, github):
     CONN.commit()
     print "Successfully added student: %s %s" % (first_name, last_name)
 
-def get_project():
-    query = """SELECT title, max_grade FROM Projects"""
-    DB.execute(query)
-    rows = DB.fetchall()
-    print rows
+def get_project(project_title):
+    query = """SELECT description, max_grade FROM Projects WHERE title = ?"""
+    DB.execute(query, (project_title,))
+    row = DB.fetchone()
+    print "%s description: %s. It has a maximum grade of %d" %(project_title, row[0], row[1])
 
 def make_new_project(project_title, description, max_grade):
     query = """INSERT INTO Projects(title, description, max_grade) VALUES (?,?,?)"""
@@ -63,7 +63,6 @@ def main():
     while command != "quit":
         input_string = raw_input("HBA Database> ")
         tokens = input_string.split(',')
-       # print tokens
         command = tokens[0].strip()
         args = tokens[1:]
         newargs = []
@@ -72,19 +71,55 @@ def main():
             newargs.append(arg)
 
         if command == "student":
-            get_student_by_github(*newargs) 
+            if len(newargs) != 1:
+                print "Incorrect number of arguments. This command requires 1 argument: github."
+            else:
+                get_student_by_github(*newargs) 
         elif command == "new student":
-            make_new_student(*newargs)
+            if len(newargs) != 3:
+                print "Incorrect number of arguments. This command requires 3 arguments: first name, last name, github."
+            else:
+                make_new_student(*newargs)
         elif command == "project":
-            get_project()
+            if len(newargs) != 1:
+                print "Incorrect number of arguments. This command requires 1 argument: Project title."
+            else:
+                get_project(*newargs)
         elif command == "new project":
-            make_new_project(*newargs)
+            if len(newargs) != 3:
+                print "Incorrect number of arguments. This command requires 3 arguments: Project Title, Description, and Maximum Grade."
+            else:
+                try:
+                    max_grade = int(newargs[2])
+                    if max_grade > 100:
+                        print "Max grade must be less than or equal to 100."
+                    else:
+                        make_new_project(*newargs)
+                except ValueError:
+                    print "The max grade you entered is not an integer!"
+            
         elif command == "student project grade":
-            get_student_project_grade(*newargs)
+            if len(newargs) != 2:
+                print "Incorrect number of arguments. This command requires 2 arguments: Name, project_title."
+            else:
+                get_student_project_grade(*newargs)
         elif command == "give grade":
-            give_student_grade(*newargs)
+            if len(newargs) != 3:
+                print "Incorrect number of arguments. This command requires 3 arguments: last name, project title, grade."
+            else:
+                try:
+                    max_grade = int(newargs[2])
+                    if max_grade > 100:
+                        print "Student grade must be less than or equal to 100."
+                    else:
+                        give_student_grade(*newargs)
+                except ValueError:
+                    print "The grade you entered is not an integer!"
         elif command == "student grades":
-            return_student_grades(*newargs)
+            if len(newargs) != 1:
+                print "Incorrect number of arguments. This command requires 1 argument: last name."
+            else:
+                return_student_grades(*newargs)
  
 
     CONN.close()
