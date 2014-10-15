@@ -1,0 +1,14 @@
+<html>
+<head>
+    Details on project {{ project_title }}
+</head>
+<body>
+<h1>
+
+    {% for name_and_grade in names_and_grades: %}
+    <a href="/student?poop={{ name_and_grade[0] }}">{{ name_and_grade[0] }}</a>,
+ received a grade of {{name_and_grade[1]}} <br>
+    {%endfor%}
+
+</body>
+</html>
