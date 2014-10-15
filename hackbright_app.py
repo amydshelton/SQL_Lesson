@@ -7,7 +7,7 @@ def get_student_by_github(github):
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
     DB.execute(query, (github,))
     row = DB.fetchone()
-    print """Student: %s %s  Github account: %s"""%(row[0], row[1], row[2])
+    return row
 
 def make_new_student(first_name, last_name, github):
     query = """INSERT INTO Students VALUES (?, ?, ?)"""
@@ -49,8 +49,15 @@ def return_student_grades(last_name):
     query = """SELECT project_title, grade FROM Grades WHERE student_github = ?"""
     DB.execute(query, (github,))
     rows = DB.fetchall()
-    for project in rows:
-        print "On project %s, %s got %d" % (str(project[0]), last_name, project[1])
+    return rows
+#    for project in rows:
+ #       print "On project %s, %s got %d" % (str(project[0]), last_name, project[1])
+
+def return_all_student_grades(project_title):
+    query = """SELECT student_github, grade FROM Grades WHERE project_title = ?"""
+    DB.execute(query, (project_title,))
+    rows = DB.fetchall()
+    return rows
 
 def connect_to_db():
     global DB, CONN
@@ -120,6 +127,12 @@ def main():
                 print "Incorrect number of arguments. This command requires 1 argument: last name."
             else:
                 return_student_grades(*newargs)
+
+        elif command == "all grades on a project":
+            if len(newargs) != 1:
+                print "Incorrect number of arguments. This command requires 1 argument: Project title."
+            else:
+                return_all_student_grades(*newargs)
  
 
     CONN.close()
