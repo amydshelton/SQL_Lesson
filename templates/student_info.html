@@ -6,8 +6,12 @@
 <p>It is my recommendation that they be put on double-secret probation for the remainder of the course.</p>
 
 <p>
-    {% for grade in grades:%}
-     On project <a href="/projects?project={{ grade[0] }}">{{ grade[0] }}</a>, {{ first_name }} {{ last_name }} received a grade of {{ grade[1] }}. <br><br>
-    {%endfor%}
+    {% for item in name_and_grades %}
+    On project <a href="/projects?project={{ name_and_grades[project_name] }}">
+     {{ item['project_name'] }}</a>, {{ first_name }} {{ last_name }} received a grade of {{ item['grade'] }}. <br><br>
+
+     {%endfor%}
+</p>
+
 </body>
 </html>

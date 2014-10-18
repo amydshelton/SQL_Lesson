@@ -13,7 +13,7 @@ def make_new_student(first_name, last_name, github):
     query = """INSERT INTO Students VALUES (?, ?, ?)"""
     DB.execute(query, (first_name, last_name, github))
     CONN.commit()
-    print "Successfully added student: %s %s" % (first_name, last_name)
+    return "Successfully added student: %s %s" % (first_name, last_name)
 
 def get_project(project_title):
     query = """SELECT description, max_grade FROM Projects WHERE title = ?"""
